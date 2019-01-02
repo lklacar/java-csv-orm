@@ -10,6 +10,8 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +61,7 @@ public class ClassUtil {
         }
     }
 
-    public static Method getSetterForField(Class classDescriptor, String fieldName){
+    public static Method getSetterForField(Class classDescriptor, String fieldName) {
         return getPropertyDescriptors(classDescriptor)
                 .stream()
                 .filter(propertyDescriptor -> propertyDescriptor.getName().equals(fieldName))
@@ -85,4 +87,14 @@ public class ClassUtil {
                 .map(PropertyDescriptor::getReadMethod)
                 .orElseThrow(CannotFieldSetterForField::new);
     }
+
+    public static Class getGenericType(Type singleElementType) {
+        if (singleElementType instanceof ParameterizedType) {
+            ParameterizedType type = (ParameterizedType) singleElementType;
+            Type[] typeArguments = type.getActualTypeArguments();
+            return (Class) typeArguments[0];
+        }
+        return null;
+    }
+
 }

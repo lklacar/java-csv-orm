@@ -12,10 +12,8 @@ import java.util.Optional;
 public class ValueMapper {
 
     private HashMap<Class<?>, Mapper> mappers;
-    private String collectionDelimiter;
 
     public ValueMapper(String collectionDelimiter) {
-        this.collectionDelimiter = collectionDelimiter;
         mappers = new HashMap<>();
         mappers.put(Long.class, new LongMapper());
         mappers.put(String.class, new StringMapper());

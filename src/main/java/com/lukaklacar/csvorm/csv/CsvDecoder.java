@@ -39,15 +39,8 @@ public class CsvDecoder<T> {
                     Object value = null;
                     //TODO: Make this prettier
                     if (Collection.class.isAssignableFrom(valueType)) {
-                        Type singleElementType = getter.getGenericReturnType();
-                        if (singleElementType instanceof ParameterizedType) {
-                            ParameterizedType type = (ParameterizedType) singleElementType;
-                            Type[] typeArguments = type.getActualTypeArguments();
-                            for (Type typeArgument : typeArguments) {
-                                Class typeArgClass = (Class) typeArgument;
-                                value = valueMapper.parseCollectionFromString(stringValue, valueType, typeArgClass);
-                            }
-                        }
+                        Class typeArgClass = ClassUtil.getGenericType(getter.getGenericReturnType());
+                        value = valueMapper.parseCollectionFromString(stringValue, valueType, typeArgClass);
                     } else {
                         value = valueMapper.parseFromString(stringValue, valueType);
                     }

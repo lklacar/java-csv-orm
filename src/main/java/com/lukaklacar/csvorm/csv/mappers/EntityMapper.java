@@ -9,7 +9,6 @@ public class EntityMapper implements Mapper<Object> {
 
     @Override
     public Object parseFromString(String s, Class<?> type, Class<?> collectionElementType) {
-        //TODO: Make this prettier
         Object value = ClassUtil.newInstance(type);
         ((AbstractEntity) value).setId(Long.parseLong(s));
         return value;
