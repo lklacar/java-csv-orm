@@ -11,14 +11,14 @@ import java.util.Optional;
 
 public class ValueMapper {
 
-    private HashMap<Class<?>, Mapper> mappers;
+    private HashMap<Class<?>, SingleValueMapper> mappers;
 
     public ValueMapper(String collectionDelimiter) {
         mappers = new HashMap<>();
         mappers.put(Long.class, new LongMapper());
         mappers.put(String.class, new StringMapper());
         mappers.put(AbstractEntity.class, new EntityMapper());
-        mappers.put(Collection.class, new CollectionMapper(collectionDelimiter, this));
+        mappers.put(Collection.class, new GenericCollectionMapper(collectionDelimiter, this));
     }
 
     public Object parseFromString(String stringValue, Class<?> valueType) {
@@ -26,9 +26,8 @@ public class ValueMapper {
                 .keySet()
                 .stream()
                 .filter(key -> key.isAssignableFrom(valueType))
-                .filter(key -> !Collection.class.equals(key))
                 .findFirst()
-                .map(key -> mappers.get(key).parseFromString(stringValue, valueType, null))
+                .map(key -> ((SingleValueMapper<?>) mappers.get(key)).parseFromString(stringValue, valueType))
                 .orElseThrow(CannotFindValueMapper::new);
     }
 
@@ -47,7 +46,8 @@ public class ValueMapper {
 
     }
 
-    public Object parseCollectionFromString(String stringValue, Class valueType, Class typeArgClass) {
-        return mappers.get(Collection.class).parseFromString(stringValue, valueType, typeArgClass);
+    public Object parseCollectionFromString(String stringValue, Class<?> valueType, Class<?> typeArgClass) {
+        return ((CollectionMapper<?>) mappers.get(Collection.class))
+                .parseCollectionFromString(stringValue, valueType, typeArgClass);
     }
 }
