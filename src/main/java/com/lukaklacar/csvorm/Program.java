@@ -4,6 +4,8 @@ import com.lukaklacar.csvorm.csv.CSVDecoder;
 import com.lukaklacar.csvorm.csv.CSVEncoder;
 import com.lukaklacar.csvorm.csv.ValueMapper;
 import com.lukaklacar.csvorm.entity.ExampleEntity;
+import com.lukaklacar.csvorm.entitymanager.EntityManager;
+import com.lukaklacar.csvorm.entitymanager.EntityManagerFactory;
 
 import java.util.Arrays;
 
@@ -34,5 +36,12 @@ public class Program {
 
         ExampleEntity e = new CSVDecoder<>(",", ExampleEntity.class, valueMapper).decode(encodedString, header);
 
+        EntityManager<ExampleEntity> exampleEntityManager = EntityManagerFactory.createEntityManagerForClass(ExampleEntity.class);
+
+        exampleEntityManager.findAll();
+
+        exampleEntityManager.save(exampleEntity1);
+
+        exampleEntityManager.findAll();
     }
 }

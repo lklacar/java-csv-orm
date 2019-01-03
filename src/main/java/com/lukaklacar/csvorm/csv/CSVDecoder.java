@@ -33,7 +33,7 @@ public class CSVDecoder<T> {
                     Method getter = ClassUtil.getGetterForField(classDescriptor, fieldName);
                     Class valueType = getter.getReturnType();
 
-                    Object value = null;
+                    Object value;
                     //TODO: Make this prettier
                     if (Collection.class.isAssignableFrom(valueType)) {
                         Class typeArgClass = ClassUtil.getGenericType(getter.getGenericReturnType());
@@ -41,7 +41,6 @@ public class CSVDecoder<T> {
                     } else {
                         value = valueMapper.parseFromString(stringValue, valueType);
                     }
-
 
                     ClassUtil.invokeMethod(setter, object, value);
                 });
