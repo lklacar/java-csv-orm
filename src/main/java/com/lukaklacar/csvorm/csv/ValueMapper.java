@@ -18,6 +18,10 @@ public class ValueMapper {
         mappers.put(Long.class, new LongMapper());
         mappers.put(String.class, new StringMapper());
         mappers.put(AbstractEntity.class, new EntityMapper());
+        mappers.put(Double.class, new DoubleMapper());
+        mappers.put(Float.class, new FloatMapper());
+        mappers.put(Integer.class, new IntegerMapper());
+        mappers.put(Short.class, new ShortMapper());
         mappers.put(Collection.class, new GenericCollectionMapper(collectionDelimiter, this));
     }
 
@@ -33,16 +37,14 @@ public class ValueMapper {
 
     public String convertToString(Object val) {
         return Optional.ofNullable(val)
-                .map(value -> {
-                    Class<?> valueType = value.getClass();
-                    return mappers
-                            .keySet()
-                            .stream()
-                            .filter(key -> key.isAssignableFrom(valueType))
-                            .findFirst()
-                            .map(key -> mappers.get(key).convertToString(value))
-                            .orElseThrow(CannotFindValueMapper::new);
-                }).orElseThrow(FieldCannotBeNull::new);
+                .map(value -> mappers
+                        .keySet()
+                        .stream()
+                        .filter(key -> key.isAssignableFrom(value.getClass()))
+                        .findFirst()
+                        .map(key -> mappers.get(key).convertToString(value))
+                        .orElseThrow(CannotFindValueMapper::new))
+                .orElseThrow(FieldCannotBeNull::new);
 
     }
 

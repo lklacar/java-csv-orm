@@ -1,8 +1,6 @@
 package com.lukaklacar.csvorm.exceptions;
 
-import java.beans.IntrospectionException;
-
-public class CannotGetPropertyDescriptors extends CsvOrmException {
+public class CannotGetPropertyDescriptors extends CSVORMException {
     public CannotGetPropertyDescriptors() {
     }
 

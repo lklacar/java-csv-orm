@@ -1,6 +1,6 @@
 package com.lukaklacar.csvorm.exceptions;
 
-public class CannotGetGettersExceptioon extends CsvOrmException {
+public class CannotGetGettersExceptioon extends CSVORMException {
     public CannotGetGettersExceptioon() {
     }
 

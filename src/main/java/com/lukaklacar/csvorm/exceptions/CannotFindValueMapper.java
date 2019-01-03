@@ -1,6 +1,6 @@
 package com.lukaklacar.csvorm.exceptions;
 
-public class CannotFindValueMapper extends CsvOrmException {
+public class CannotFindValueMapper extends CSVORMException {
     public CannotFindValueMapper() {
     }
 

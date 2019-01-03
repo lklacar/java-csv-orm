@@ -8,13 +8,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class CsvDecoder<T> {
+public class CSVDecoder<T> {
 
     private String delimiter;
     private Class<T> classDescriptor;
     private ValueMapper valueMapper;
 
-    public CsvDecoder(String delimiter, Class<T> classDescriptor, ValueMapper valueMapper) {
+    public CSVDecoder(String delimiter, Class<T> classDescriptor, ValueMapper valueMapper) {
         this.delimiter = delimiter;
         this.classDescriptor = classDescriptor;
         this.valueMapper = valueMapper;

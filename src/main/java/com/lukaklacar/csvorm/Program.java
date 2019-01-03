@@ -1,7 +1,7 @@
 package com.lukaklacar.csvorm;
 
-import com.lukaklacar.csvorm.csv.CsvDecoder;
-import com.lukaklacar.csvorm.csv.CsvEncoder;
+import com.lukaklacar.csvorm.csv.CSVDecoder;
+import com.lukaklacar.csvorm.csv.CSVEncoder;
 import com.lukaklacar.csvorm.csv.ValueMapper;
 import com.lukaklacar.csvorm.entity.ExampleEntity;
 
@@ -29,10 +29,10 @@ public class Program {
         ValueMapper valueMapper = new ValueMapper("|");
 
 
-        String encodedString = new CsvEncoder(",", valueMapper).encode(exampleEntity1);
-        String header = new CsvEncoder(",", valueMapper).getHeader(exampleEntity1.getClass());
+        String encodedString = new CSVEncoder(",", valueMapper).encode(exampleEntity1);
+        String header = new CSVEncoder(",", valueMapper).getHeader(exampleEntity1.getClass());
 
-        ExampleEntity e = new CsvDecoder<>(",", ExampleEntity.class, valueMapper).decode(encodedString, header);
+        ExampleEntity e = new CSVDecoder<>(",", ExampleEntity.class, valueMapper).decode(encodedString, header);
 
     }
 }

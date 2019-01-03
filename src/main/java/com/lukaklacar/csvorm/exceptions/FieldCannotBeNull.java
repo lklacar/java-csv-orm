@@ -1,6 +1,6 @@
 package com.lukaklacar.csvorm.exceptions;
 
-public class FieldCannotBeNull extends CsvOrmException {
+public class FieldCannotBeNull extends CSVORMException {
     public FieldCannotBeNull() {
     }
 

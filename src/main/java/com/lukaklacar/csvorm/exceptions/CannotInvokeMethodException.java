@@ -1,6 +1,6 @@
 package com.lukaklacar.csvorm.exceptions;
 
-public class CannotInvokeMethodException extends CsvOrmException {
+public class CannotInvokeMethodException extends CSVORMException {
     public CannotInvokeMethodException() {
     }
 

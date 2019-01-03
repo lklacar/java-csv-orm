@@ -6,12 +6,12 @@ import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class CsvEncoder {
+public class CSVEncoder {
 
     private String delimiter;
     private ValueMapper valueMapper;
 
-    public CsvEncoder(String delimiter, ValueMapper valueMapper) {
+    public CSVEncoder(String delimiter, ValueMapper valueMapper) {
         this.delimiter = delimiter;
         this.valueMapper = valueMapper;
     }

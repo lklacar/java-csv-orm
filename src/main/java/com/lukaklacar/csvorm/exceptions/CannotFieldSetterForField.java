@@ -1,6 +1,6 @@
 package com.lukaklacar.csvorm.exceptions;
 
-public class CannotFieldSetterForField extends CsvOrmException {
+public class CannotFieldSetterForField extends CSVORMException {
 
     public CannotFieldSetterForField() {
     }

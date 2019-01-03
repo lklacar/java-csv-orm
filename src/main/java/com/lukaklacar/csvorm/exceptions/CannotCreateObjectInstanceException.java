@@ -1,6 +1,6 @@
 package com.lukaklacar.csvorm.exceptions;
 
-public class CannotCreateObjectInstanceException extends CsvOrmException {
+public class CannotCreateObjectInstanceException extends CSVORMException {
     public CannotCreateObjectInstanceException() {
     }
 
