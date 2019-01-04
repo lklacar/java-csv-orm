@@ -1,59 +1,43 @@
 package com.lukaklacar.csvorm.entitymanager;
 
-import com.lukaklacar.csvorm.csv.CSVDecoder;
 import com.lukaklacar.csvorm.csv.CSVEncoder;
-import com.lukaklacar.csvorm.csv.ValueMapper;
-import com.lukaklacar.csvorm.entity.AbstractEntity;
 import com.lukaklacar.csvorm.util.FileUtil;
+import lombok.val;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.File;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class EntityManager<T extends AbstractEntity> {
-    private Class classDescriptor;
-    private CSVDecoder<T> csvDecoder;
+public class EntityManager<T> {
+
+    private File dataFile;
     private CSVEncoder csvEncoder;
 
-    public EntityManager(Class<T> classDescriptor) {
-        this.classDescriptor = classDescriptor;
-        ValueMapper valueMapper = new ValueMapper("|");
-        csvEncoder = new CSVEncoder(",", valueMapper);
-        csvDecoder = new CSVDecoder<>(",", classDescriptor, valueMapper);
-        ensureFileExists();
+    public EntityManager() {
+        csvEncoder = new CSVEncoder<T>();
+        initDataFile();
     }
 
-    public Collection<T> findAll() {
-        List<String> lines = FileUtil.readFileLines(getFile());
-        if (lines.size() == 0) {
-            return new ArrayList<>();
+    @SuppressWarnings("unchecked")
+    private Class<T> getGenericType() {
+        val superClass = (ParameterizedType) getClass().getGenericSuperclass();
+        return (Class<T>) superClass.getActualTypeArguments()[0];
+    }
+
+    public File createDataFileIfNotExist() {
+        return FileUtil.createFileIfNotExist("data/" + getGenericType().getName() + ".csv");
+    }
+
+    public void initDataFile() {
+        dataFile = createDataFileIfNotExist();
+        writeHeader();
+    }
+
+    private void writeHeader() {
+        List<String> lines = FileUtil.readFileLines(dataFile);
+        if (lines.isEmpty()) {
+            lines.add(csvEncoder.getHeader(getGenericType()));
+            FileUtil.writeFileLines(dataFile, lines);
         }
-        String header = lines.get(0);
-        lines.remove(0);
-        return lines
-                .stream()
-                .map(line -> csvDecoder.decode(line, header))
-                .collect(Collectors.toList());
-    }
-
-    public void save(T entity) {
-        Collection<T> all = findAll();
-        all.add(entity);
-        List<String> lines = all
-                .stream()
-                .map(item -> csvEncoder.encode(item))
-                .collect(Collectors.toList());
-        FileUtil.writeLinesToFile(getFile(), lines);
-    }
-
-    private void ensureFileExists() {
-        FileUtil.createFileIfNotExist(getFile());
-    }
-
-    private Path getFile() {
-        return Paths.get("data/" + classDescriptor.getName() + ".csv");
     }
 }

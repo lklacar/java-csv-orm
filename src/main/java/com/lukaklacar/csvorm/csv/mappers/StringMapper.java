@@ -1,6 +1,6 @@
 package com.lukaklacar.csvorm.csv.mappers;
 
-public class StringMapper implements SingleValueMapper<String> {
+public class StringMapper implements PrimitiveTypeMapper<String> {
     @Override
     public String parseFromString(String s, Class<?> valueType) {
         return s;

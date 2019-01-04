@@ -3,7 +3,7 @@ package com.lukaklacar.csvorm.csv.mappers;
 
 import java.util.Optional;
 
-public class LongMapper implements SingleValueMapper<Long> {
+public class LongMapper implements PrimitiveTypeMapper<Long> {
     @Override
     public Long parseFromString(String s, Class<?> valueType) {
         return Long.parseLong(s);

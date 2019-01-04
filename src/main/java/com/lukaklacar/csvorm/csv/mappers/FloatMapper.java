@@ -2,7 +2,7 @@ package com.lukaklacar.csvorm.csv.mappers;
 
 import java.util.Optional;
 
-public class FloatMapper implements SingleValueMapper<Float> {
+public class FloatMapper implements PrimitiveTypeMapper<Float> {
     @Override
     public Float parseFromString(String s, Class<?> type) {
         return Float.parseFloat(s);

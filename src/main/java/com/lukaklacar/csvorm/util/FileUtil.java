@@ -1,42 +1,40 @@
 package com.lukaklacar.csvorm.util;
 
-import com.lukaklacar.csvorm.exceptions.CannotReadDataFile;
 
-import java.io.FileOutputStream;
-import java.io.FileWriter;
+import com.lukaklacar.csvorm.exceptions.CannotCreateDataFileException;
+import com.lukaklacar.csvorm.exceptions.CannotReadFileException;
+import com.lukaklacar.csvorm.exceptions.CannotWriteToFileException;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FileUtil {
 
-    public static List<String> readFileLines(Path filePath) {
+    public static File createFileIfNotExist(String path) {
         try {
-            return Files.lines(filePath).collect(Collectors.toList());
+            File file = new File(path);
+            file.createNewFile();
+            return file;
         } catch (IOException e) {
-            throw new CannotReadDataFile();
+            throw new CannotCreateDataFileException();
         }
     }
 
-    public static void createFileIfNotExist(Path path) {
+    public static List<String> readFileLines(File file) {
         try {
-            new FileOutputStream(String.valueOf(path), true).close();
+            return FileUtils.readLines(file, "UTF-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CannotReadFileException();
         }
     }
 
-    public static void writeLinesToFile(Path filePath, List<String> lines) {
-        PrintWriter pw;
+    public static void writeFileLines(File file, List<String> lines) {
         try {
-            pw = new PrintWriter(new FileWriter(filePath.toString()));
-            lines.forEach(pw::write);
-            pw.close();
+            FileUtils.writeLines(file, lines);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CannotWriteToFileException();
         }
     }
 }

@@ -1,47 +1,22 @@
 package com.lukaklacar.csvorm;
 
-import com.lukaklacar.csvorm.csv.CSVDecoder;
 import com.lukaklacar.csvorm.csv.CSVEncoder;
-import com.lukaklacar.csvorm.csv.ValueMapper;
-import com.lukaklacar.csvorm.entity.ExampleEntity;
-import com.lukaklacar.csvorm.entitymanager.EntityManager;
-import com.lukaklacar.csvorm.entitymanager.EntityManagerFactory;
-
-import java.util.Arrays;
+import com.lukaklacar.csvorm.example.User;
+import com.lukaklacar.csvorm.example.UserEntityManager;
+import lombok.var;
 
 public class Program {
 
     public static void main(String[] args) {
 
-        ExampleEntity exampleEntity1 = new ExampleEntity();
-        exampleEntity1.setAge(123L);
-        exampleEntity1.setName("test");
-        exampleEntity1.setId(321L);
-        exampleEntity1.setStrings(Arrays.asList("asd", "dsa"));
+        UserEntityManager userEntityManager = new UserEntityManager();
+        CSVEncoder<User> csvEncoder = new CSVEncoder<>();
 
-        ExampleEntity exampleEntity2 = new ExampleEntity();
-        exampleEntity2.setAge(123L);
-        exampleEntity2.setName("test");
-        exampleEntity2.setId(111L);
+        User u = new User();
+        u.setId(1L);
+        u.setName("Name");
 
-        exampleEntity1.setOtherEntity(exampleEntity2);
-        exampleEntity1.setExampleEntities(Arrays.asList(exampleEntity2));
+        var mapped = csvEncoder.encode(u);
 
-
-        ValueMapper valueMapper = new ValueMapper("|");
-
-
-        String encodedString = new CSVEncoder(",", valueMapper).encode(exampleEntity1);
-        String header = new CSVEncoder(",", valueMapper).getHeader(exampleEntity1.getClass());
-
-        ExampleEntity e = new CSVDecoder<>(",", ExampleEntity.class, valueMapper).decode(encodedString, header);
-
-        EntityManager<ExampleEntity> exampleEntityManager = EntityManagerFactory.createEntityManagerForClass(ExampleEntity.class);
-
-        exampleEntityManager.findAll();
-
-        exampleEntityManager.save(exampleEntity1);
-
-        exampleEntityManager.findAll();
     }
 }

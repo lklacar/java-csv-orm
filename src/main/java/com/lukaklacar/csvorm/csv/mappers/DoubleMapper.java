@@ -2,7 +2,7 @@ package com.lukaklacar.csvorm.csv.mappers;
 
 import java.util.Optional;
 
-public class DoubleMapper implements SingleValueMapper<Double> {
+public class DoubleMapper implements PrimitiveTypeMapper<Double> {
     @Override
     public Double parseFromString(String s, Class<?> type) {
         return Double.parseDouble(s);
