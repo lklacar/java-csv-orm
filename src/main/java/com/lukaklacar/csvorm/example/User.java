@@ -22,7 +22,7 @@ public class User {
     @CSVRel
     private Role role;
 
-    @CSVRel
-    private Collection<Post> posts;
+//    @CSVRel
+//    private Collection<Post> posts;
 
 }
