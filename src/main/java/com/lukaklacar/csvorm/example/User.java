@@ -1,12 +1,12 @@
 package com.lukaklacar.csvorm.example;
 
-import com.lukaklacar.csvorm.annotation.CSVEntity;
-import com.lukaklacar.csvorm.annotation.CSVField;
-import com.lukaklacar.csvorm.annotation.CSVId;
-import com.lukaklacar.csvorm.annotation.CSVRel;
+import com.lukaklacar.csvorm.annotation.*;
+import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 @CSVEntity
@@ -22,7 +22,10 @@ public class User {
     @CSVRel
     private Role role;
 
-//    @CSVRel
-//    private Collection<Post> posts;
+    @CSVCollectionRel
+    private Collection<Post> posts = new ArrayList<>();
+
+    @CSVCollectionField
+    private List<String> strings = new ArrayList<>();
 
 }

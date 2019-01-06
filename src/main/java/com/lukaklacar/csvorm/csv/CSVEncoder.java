@@ -1,30 +1,22 @@
 package com.lukaklacar.csvorm.csv;
 
 import com.lukaklacar.csvorm.annotation.CSVId;
-import com.lukaklacar.csvorm.csv.mappers.*;
 import com.lukaklacar.csvorm.util.ClassUtil;
 import com.lukaklacar.csvorm.util.EntityDescription;
 import com.lukaklacar.csvorm.util.EntityUtil;
 import lombok.var;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class CSVEncoder<T> {
 
     private static final String DELIMITER = ",";
-    private Map<Class, PrimitiveTypeMapper> valueMappers;
+    private Mapper valueMapper;
 
     public CSVEncoder() {
-        valueMappers = new HashMap<>();
-        valueMappers.put(Double.class, new DoubleMapper());
-        valueMappers.put(Float.class, new FloatMapper());
-        valueMappers.put(Integer.class, new IntegerMapper());
-        valueMappers.put(Long.class, new LongMapper());
-        valueMappers.put(Short.class, new ShortMapper());
-        valueMappers.put(String.class, new StringMapper());
+        valueMapper = new Mapper();
     }
 
     public String encode(T entity) {
@@ -33,8 +25,20 @@ public class CSVEncoder<T> {
         return String.join(DELIMITER,
                 getIdValue(entity, entityDescription),
                 getPrimaryTypeValues(entity, entityDescription),
-                getRelationValues(entity, entityDescription)
+                getRelationValues(entity, entityDescription),
+                getPrimaryTypeCollectionValues(entity, entityDescription)
         );
+    }
+
+    private String getPrimaryTypeCollectionValues(T entity, EntityDescription entityDescription) {
+        return entityDescription.getPrimaryTypesCollection()
+                .stream()
+                .map(field ->
+                {
+                    var collection = ClassUtil.getFieldValue(field, entity);
+                    return valueMapper.mapCollection((Collection) collection);
+                })
+                .collect(Collectors.joining(DELIMITER));
     }
 
     private String getRelationValues(T entity, EntityDescription entityDescription) {
@@ -47,7 +51,7 @@ public class CSVEncoder<T> {
                     var relatedObjectType = relatedObject.getClass();
                     var relatedObjectIdField = ClassUtil.getAnnotatedField(relatedObjectType, CSVId.class).get(0);
                     var relatedObjectIdValue = ClassUtil.getFieldValue(relatedObjectIdField, relatedObject);
-                    return mapValue(relatedObjectIdValue);
+                    return valueMapper.mapValue(relatedObjectIdValue);
                 })
                 .collect(Collectors.joining(DELIMITER));
     }
@@ -55,17 +59,12 @@ public class CSVEncoder<T> {
     private String getPrimaryTypeValues(T entity, EntityDescription entityDescription) {
         return entityDescription.getFields()
                 .stream()
-                .map(field -> mapValue(ClassUtil.getFieldValue(field, entity)))
+                .map(field -> valueMapper.mapValue(ClassUtil.getFieldValue(field, entity)))
                 .collect(Collectors.joining(DELIMITER));
     }
 
     private String getIdValue(T entity, EntityDescription entityDescription) {
-        return mapValue(ClassUtil.getFieldValue(entityDescription.getIdField(), entity));
-    }
-
-    @SuppressWarnings("unchecked")
-    private String mapValue(Object idValue) {
-        return valueMappers.get(idValue.getClass()).convertToString(idValue);
+        return valueMapper.mapValue(ClassUtil.getFieldValue(entityDescription.getIdField(), entity));
     }
 
     public String getHeader(Class<?> classDescriptor) {
@@ -74,7 +73,8 @@ public class CSVEncoder<T> {
         return String.join(DELIMITER,
                 entityDescription.getIdField().getName(),
                 entityDescription.getFields().stream().map(Field::getName).collect(Collectors.joining(DELIMITER)),
-                entityDescription.getRelationFields().stream().map(Field::getName).collect(Collectors.joining(DELIMITER))
+                entityDescription.getRelationFields().stream().map(Field::getName).collect(Collectors.joining(DELIMITER)),
+                entityDescription.getPrimaryTypesCollection().stream().map(Field::getName).collect(Collectors.joining(DELIMITER))
         );
     }
 

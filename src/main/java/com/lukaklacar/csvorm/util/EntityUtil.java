@@ -1,5 +1,6 @@
 package com.lukaklacar.csvorm.util;
 
+import com.lukaklacar.csvorm.annotation.CSVCollectionField;
 import com.lukaklacar.csvorm.annotation.CSVField;
 import com.lukaklacar.csvorm.annotation.CSVId;
 import com.lukaklacar.csvorm.annotation.CSVRel;
@@ -22,10 +23,15 @@ public class EntityUtil {
                 .stream().sorted(Comparator.comparing(Field::getName))
                 .collect(Collectors.toList());
 
+        List<Field> primaryTypeCollectionFields = ClassUtil.getAnnotatedField(entity, CSVCollectionField.class)
+                .stream().sorted(Comparator.comparing(Field::getName))
+                .collect(Collectors.toList());
+
         return EntityDescription.builder()
                 .idField(idField)
                 .fields(fields)
                 .relationFields(relationFields)
+                .primaryTypesCollection(primaryTypeCollectionFields)
                 .build();
     }
 

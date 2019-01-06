@@ -13,5 +13,7 @@ public class EntityDescription {
     private Field idField;
     private Collection<Field> fields;
     private Collection<Field> relationFields;
+    private Collection<Field> primaryTypesCollection;
+    private Collection<Field> relationsCollection;
 
 }
