@@ -1,16 +1,16 @@
 package com.lukaklacar.csvorm.csv.mappers;
 
-import com.lukaklacar.csvorm.csv.Mapper;
+import com.lukaklacar.csvorm.csv.ValueMapper;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class PrimaryValueCollectionMapper implements PrimitiveTypeMapper<Collection<?>> {
+public class PrimaryValueCollectionMapper implements Mapper<Collection<?>> {
 
     private static final String DELIMITER = "|";
-    private Mapper valueMapper;
+    private ValueMapper valueMapper;
 
-    public PrimaryValueCollectionMapper(Mapper valueMapper) {
+    public PrimaryValueCollectionMapper(ValueMapper valueMapper) {
         this.valueMapper = valueMapper;
     }
 

@@ -1,6 +1,6 @@
 package com.lukaklacar.csvorm.csv.mappers;
 
-public interface PrimitiveTypeMapper<T> {
+public interface Mapper<T> {
 
     T parseFromString(String s, Class<?> type);
 

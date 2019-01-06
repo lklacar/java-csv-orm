@@ -1,7 +1,6 @@
 package com.lukaklacar.csvorm.example;
 
 import com.lukaklacar.csvorm.annotation.*;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -22,10 +21,10 @@ public class User {
     @CSVRel
     private Role role;
 
-    @CSVCollectionRel
+    @CSVRelCollection
     private Collection<Post> posts = new ArrayList<>();
 
-    @CSVCollectionField
+    @CSVFieldCollection
     private List<String> strings = new ArrayList<>();
 
 }

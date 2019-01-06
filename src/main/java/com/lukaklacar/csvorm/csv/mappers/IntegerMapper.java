@@ -2,7 +2,7 @@ package com.lukaklacar.csvorm.csv.mappers;
 
 import java.util.Optional;
 
-public class IntegerMapper implements PrimitiveTypeMapper<Integer> {
+public class IntegerMapper implements Mapper<Integer> {
     @Override
     public Integer parseFromString(String s, Class<?> type) {
         return Integer.parseInt(s);

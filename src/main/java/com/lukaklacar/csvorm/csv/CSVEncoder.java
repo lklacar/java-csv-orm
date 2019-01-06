@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 public class CSVEncoder<T> {
 
     private static final String DELIMITER = ",";
-    private Mapper valueMapper;
+    private ValueMapper valueMapper;
 
     public CSVEncoder() {
-        valueMapper = new Mapper();
+        valueMapper = new ValueMapper();
     }
 
     public String encode(T entity) {
@@ -26,8 +26,19 @@ public class CSVEncoder<T> {
                 getIdValue(entity, entityDescription),
                 getPrimaryTypeValues(entity, entityDescription),
                 getRelationValues(entity, entityDescription),
-                getPrimaryTypeCollectionValues(entity, entityDescription)
+                getPrimaryTypeCollectionValues(entity, entityDescription),
+                getRelationCollectionValues(entity, entityDescription)
         );
+    }
+
+    private String getRelationCollectionValues(T entity, EntityDescription entityDescription) {
+        return entityDescription.getRelationsCollection()
+                .stream()
+                .map(field -> {
+                    var collection = ClassUtil.getFieldValue(field, entity);
+                    return valueMapper.mapRelationCollection(collection);
+                })
+                .collect(Collectors.joining(DELIMITER));
     }
 
     private String getPrimaryTypeCollectionValues(T entity, EntityDescription entityDescription) {
@@ -36,7 +47,7 @@ public class CSVEncoder<T> {
                 .map(field ->
                 {
                     var collection = ClassUtil.getFieldValue(field, entity);
-                    return valueMapper.mapCollection((Collection) collection);
+                    return valueMapper.mapPrimaryTypeCollection((Collection) collection);
                 })
                 .collect(Collectors.joining(DELIMITER));
     }
@@ -74,7 +85,8 @@ public class CSVEncoder<T> {
                 entityDescription.getIdField().getName(),
                 entityDescription.getFields().stream().map(Field::getName).collect(Collectors.joining(DELIMITER)),
                 entityDescription.getRelationFields().stream().map(Field::getName).collect(Collectors.joining(DELIMITER)),
-                entityDescription.getPrimaryTypesCollection().stream().map(Field::getName).collect(Collectors.joining(DELIMITER))
+                entityDescription.getPrimaryTypesCollection().stream().map(Field::getName).collect(Collectors.joining(DELIMITER)),
+                entityDescription.getRelationsCollection().stream().map(Field::getName).collect(Collectors.joining(DELIMITER))
         );
     }
 

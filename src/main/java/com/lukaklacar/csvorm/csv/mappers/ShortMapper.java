@@ -2,7 +2,7 @@ package com.lukaklacar.csvorm.csv.mappers;
 
 import java.util.Optional;
 
-public class ShortMapper implements PrimitiveTypeMapper<Short> {
+public class ShortMapper implements Mapper<Short> {
     @Override
     public Short parseFromString(String s, Class<?> type) {
         return Short.parseShort(s);
